@@ -1,0 +1,14 @@
+[
+  {
+    "ip": "play.example-network.net",
+    "name": "Example Network",
+    "details": "Ranked PvP · Practice",
+    "icon": "https://spliceclient.github.io/splice-server-registry/servers/example-network/icon.png"
+  },
+  {
+    "ip": "play.minesplice.com",
+    "name": "Minesplice Network",
+    "details": "Home of the Splice Client",
+    "icon": "https://spliceclient.github.io/splice-server-registry/servers/minesplice/icon.png"
+  }
+]
