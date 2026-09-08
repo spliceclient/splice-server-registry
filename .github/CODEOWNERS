@@ -1,0 +1,8 @@
+# Every change requires review + approval from Splice staff. Combined with branch protection
+# ("Require review from Code Owners" + "Require a pull request before merging"), this means server
+# submissions can ONLY go live after a staff member approves and merges the PR.
+#
+# Replace the owner below with your real staff GitHub team or usernames, e.g.:
+#   *  @spliceclient/staff       (create a "staff" team in the spliceclient org, give it write access)
+#   *  @YourGithubUsername        (or just list staff usernames directly)
+* @spliceclient/staff

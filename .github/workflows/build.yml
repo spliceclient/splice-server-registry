@@ -1,0 +1,49 @@
+name: Build & publish registry
+
+# On merge to main, rebuild presence.json from the VALID entries (invalid ones are auto-excluded) and
+# publish it + the icons to GitHub Pages. Publishing to Pages (rather than committing back to main) means
+# CI never has to push to the protected main branch. The client fetches:
+#   https://<owner>.github.io/<repo>/presence.json
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'servers/**'
+      - 'scripts/**'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build presence.json (invalid entries excluded)
+        env:
+          # Icons are served from Pages alongside the JSON, so their URLs use the Pages base.
+          REGISTRY_RAW_BASE: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: node scripts/validate.js --build
+      - name: Assemble Pages site (json + icons)
+        run: |
+          mkdir -p _site
+          cp dist/presence.json _site/presence.json
+          # Copy each server's icon.png preserving servers/<id>/icon.png so the built URLs resolve.
+          if [ -d servers ]; then find servers -name icon.png -exec cp --parents {} _site/ \; ; fi
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

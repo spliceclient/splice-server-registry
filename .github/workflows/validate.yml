@@ -1,0 +1,24 @@
+name: Validate submissions
+
+# Runs on every pull request. If a submission is the wrong format the check FAILS, which (with branch
+# protection requiring this check) makes the PR unmergeable — i.e. bad-format entries can't get in.
+on:
+  pull_request:
+    paths:
+      - 'servers/**'
+      - 'scripts/**'
+      - 'schema/**'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate every server entry
+        run: node scripts/validate.js
