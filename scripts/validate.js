@@ -118,14 +118,13 @@ function main() {
   console.log(`\n${valid.length} valid, ${invalid.length} invalid, ${results.length} total.`);
 
   if (build) {
-    // icon = the Discord Rich-Presence ASSET KEY staff upload for this server (srv_<id>). Discord's URL-based
-    // external assets now 401, so the client can only show pre-uploaded asset keys. The committed icon.png is
-    // the source staff upload + review; it isn't fetched at runtime.
+    // icon = the committed icon.png's public URL. The client registers it with Discord at runtime (authenticated
+    // app token) to display it — auto-pulled from this approved list, no manual uploads.
     const entries = valid.map((r) => ({
       ip: r.meta.ip,
       name: r.meta.name,
       details: r.meta.details || '',
-      icon: 'srv_' + r.id.replace(/-/g, '_'),
+      icon: `${ICON_BASE}/servers/${r.id}/icon.png`,
     }));
     fs.mkdirSync(path.dirname(DIST), { recursive: true });
     fs.writeFileSync(DIST, JSON.stringify(entries, null, 2) + '\n');

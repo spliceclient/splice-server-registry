@@ -28,8 +28,8 @@ staff can merge. Nothing goes live until it's approved.
 
    **`icon.png`** — your server logo:
    - **PNG**, **square**, **64–1024 px**, **≤ 512 KB**.
-   - On approval, staff upload this exact file to the Splice Discord app as the presence image — it's frozen
-     at approval and can't be changed later without another approved PR.
+   - This committed file is what shows in Discord — the client auto-pulls it from this repo. It's frozen at
+     approval and can't be changed later without another approved PR.
 4. Open a **Pull Request**. A bot automatically checks the format. If anything's wrong the check fails and
    comments what to fix — **fix it and push again**.
 5. A staff member reviews and merges. Within a minute of merge the registry rebuilds and your server is live.
@@ -47,10 +47,8 @@ staff can merge. Nothing goes live until it's approved.
 - Branch protection on `main` should require: a pull request, the **Validate submissions** check passing, and
   **Code Owner review** (see `.github/CODEOWNERS`). Disallow direct pushes.
 - Review the icon and text on every PR before merging — CI checks *format*, humans check *content*.
-- **Upload the icon on approve:** in the Splice Discord app → **Rich Presence → Art Assets**, upload
-  `servers/<id>/icon.png` with the key **`srv_<id>`** (hyphens → underscores, e.g. id `minesplice` → key
-  `srv_minesplice`). The build sets each entry's `icon` to that key. Discord's URL-based external assets 401
-  now, so a pre-uploaded asset key is the only way the client can show a custom image.
+- Icons are auto-pulled: on merge, the client registers each server's committed `icon.png` URL with Discord
+  (via the Splice app token) and displays it. No per-server upload needed.
 - On merge, `build.yml` compiles `dist/presence.json` (invalid entries auto-excluded) and publishes it +
   icons to GitHub Pages. The client reads `https://<owner>.github.io/<repo>/presence.json`.
 - Validate locally: `node scripts/validate.js` — build locally: `node scripts/validate.js --build`.
